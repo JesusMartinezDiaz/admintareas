@@ -1,0 +1,25 @@
+--- a/src/app/aside/aside.component.html
++++ b/src/app/aside/aside.component.html
+@@ -2485,6 +2485,22 @@
+                       <em class="fa fa-circle-o"></em>20- Reporte Antiguedad de Saldos Nuevo
+                     </a>
+                   </li>
++                  <!-- Cobranza IA (agente virtual de cobranza por WhatsApp) -->
++                  <li data-toggle="push-menu" routerLinkActive="active">
++                    <a [routerLink]="['ventas/cobranza-ia/bloques']">
++                      <em class="fa fa-whatsapp"></em>21- Cobranza IA - Bloques de envío
++                    </a>
++                  </li>
++                  <li data-toggle="push-menu" routerLinkActive="active">
++                    <a [routerLink]="['ventas/cobranza-ia/conversaciones']">
++                      <em class="fa fa-comments"></em>22- Cobranza IA - Conversaciones
++                    </a>
++                  </li>
++                  <li data-toggle="push-menu" routerLinkActive="active">
++                    <a [routerLink]="['ventas/cobranza-ia/agente-ia']">
++                      <em class="fa fa-magic"></em>23- Cobranza IA - Agente de datos
++                    </a>
++                  </li>
+                   <!--             <li data-toggle="push-menu" routerLinkActive="active">
+                     <a [routerLink]="['ventas/reportes/reporte-tipo-pago']">
+                       <em class="fa fa-circle-o"></em>Reporte por Tipo de Pago

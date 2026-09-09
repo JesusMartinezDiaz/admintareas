@@ -1,0 +1,53 @@
+<div class="card-body">
+
+  <ngx-spinner bdColor="rgba(240, 255, 240, 0.8)" bdOpacity="0.8" color="#333" fullScreen="false" size="medium" type="square-loader">
+    <p style="color: Black">Espere...</p>
+  </ngx-spinner>
+
+  <h4 class="mb-3">Cobranza IA · Conversaciones que requieren atención humana</h4>
+
+  <div class="row">
+    <div class="col-12 col-md-4 mb-3">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-2">
+          <p class="text-muted p-2" *ngIf="conversaciones.length === 0">No hay conversaciones pendientes de revisión.</p>
+          <button
+            type="button"
+            class="list-group-item list-group-item-action"
+            *ngFor="let c of conversaciones"
+            [class.active]="seleccionada?.idConversacion === c.idConversacion"
+            (click)="seleccionar(c)">
+            <strong>Cliente #{{ c.idCliente }}</strong><br />
+            <small>{{ c.telefonoE164 }}</small><br />
+            <span class="badge badge-danger">{{ c.estatus }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-8 mb-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body" *ngIf="seleccionada; else sinSeleccion">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <strong>Cliente #{{ seleccionada.idCliente }}</strong>
+              · saldo al abrir: {{ seleccionada.saldoAlAbrir | currency:'MXN':'symbol':'1.2-2' }}
+            </div>
+            <button class="btn btn-outline-secondary btn-sm" (click)="cerrar()">Cerrar conversación</button>
+          </div>
+
+          <div class="hilo-mensajes">
+            <div class="mensaje" *ngFor="let m of mensajes" [class.saliente]="m.direccion === 'SALIENTE'">
+              <small class="text-muted">{{ m.generadoPor }}</small>
+              <p class="mb-0">{{ m.contenidoTexto || '(' + m.tipoContenido + ')' }}</p>
+            </div>
+          </div>
+        </div>
+        <ng-template #sinSeleccion>
+          <div class="card-body text-muted">Selecciona una conversación para ver el hilo de mensajes.</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+</div>

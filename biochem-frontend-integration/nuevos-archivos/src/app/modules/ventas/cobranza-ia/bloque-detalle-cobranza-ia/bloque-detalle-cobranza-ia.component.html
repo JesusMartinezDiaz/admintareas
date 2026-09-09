@@ -1,0 +1,57 @@
+<div class="card-body">
+
+  <ngx-spinner bdColor="rgba(240, 255, 240, 0.8)" bdOpacity="0.8" color="#333" fullScreen="false" size="medium" type="square-loader">
+    <p style="color: Black">Espere...</p>
+  </ngx-spinner>
+
+  <a [routerLink]="['/dashboard/ventas/cobranza-ia/bloques']"><em class="fa fa-arrow-left mr-1"></em>Volver a bloques</a>
+
+  <div class="card border-0 shadow-sm my-3" *ngIf="bloque">
+    <div class="card-body d-flex align-items-center flex-wrap resumen-bloque">
+      <div class="mr-4"><strong>{{ bloque.nombre }}</strong></div>
+      <div class="mr-4"><span class="badge badge-info">{{ bloque.estatus }}</span></div>
+      <div class="mr-4">Lote: {{ bloque.loteTamanio }} clientes cada {{ bloque.intervaloSegundosLote }}s</div>
+      <div class="mr-4">
+        Enviados: {{ contadorPorEstatus('ENVIADO') + contadorPorEstatus('RESPONDIDO') }} / {{ clientes.length }}
+      </div>
+      <div class="ml-auto">
+        <button class="btn btn-success btn-sm mr-2" (click)="iniciar()" [disabled]="bloque.estatus === 'EN_PROCESO'">
+          <em class="fa fa-play mr-1"></em>Iniciar envío
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="pausar()" [disabled]="bloque.estatus !== 'EN_PROCESO'">
+          <em class="fa fa-pause mr-1"></em>Pausar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <h6>Clientes en el bloque</h6>
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr><th>Cliente</th><th>Saldo</th><th>Días vencido</th><th>Estatus</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of clientes">
+            <td>#{{ c.idCliente }}</td>
+            <td>{{ c.saldoSnapshot | currency:'MXN':'symbol':'1.2-2' }}</td>
+            <td>{{ c.diasVencidoSnapshot || '-' }}</td>
+            <td><span class="badge" [ngClass]="{
+                'badge-warning': c.estatus === 'PENDIENTE',
+                'badge-success': c.estatus === 'RESPONDIDO' || c.estatus === 'ENTREGADO',
+                'badge-danger': c.estatus === 'ERROR',
+                'badge-secondary': c.estatus === 'EXCLUIDO'
+              }">{{ c.estatus }}</span></td>
+            <td>
+              <button class="btn btn-outline-danger btn-sm" (click)="quitar(c.idCliente)" [disabled]="c.estatus !== 'PENDIENTE'">
+                Quitar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

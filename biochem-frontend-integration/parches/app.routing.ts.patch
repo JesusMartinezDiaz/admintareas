@@ -1,0 +1,26 @@
+--- a/src/app/app.routing.ts
++++ b/src/app/app.routing.ts
+@@ -377,6 +377,11 @@
+ import { AnalisisCarteraClientesNuevoComponent } from './modules/ventas/reportes/analisis-cartera-clientes-nuevo/analisis-cartera-clientes-nuevo.component';
+ import { AntiguedadSaldosNuevoComponent } from './modules/ventas/reportes/antiguedadSaldosNuevo/antiuedad-saldos-nuevo.component'
+ import { RutasMaestrasClientesNuevoComponent } from './modules/ventas/catalogos/rutas-maestras-clientes-nuevo/rutas-maestras-clientes-nuevo.component';
++// --- Cobranza IA ---
++import { BloquesCobranzaIaComponent } from './modules/ventas/cobranza-ia/bloques-cobranza-ia/bloques-cobranza-ia.component';
++import { BloqueDetalleCobranzaIaComponent } from './modules/ventas/cobranza-ia/bloque-detalle-cobranza-ia/bloque-detalle-cobranza-ia.component';
++import { ConversacionesCobranzaIaComponent } from './modules/ventas/cobranza-ia/conversaciones-cobranza-ia/conversaciones-cobranza-ia.component';
++import { AgenteIaChatCobranzaIaComponent } from './modules/ventas/cobranza-ia/agente-ia-chat-cobranza-ia/agente-ia-chat-cobranza-ia.component';
+ 
+ const appRoutes: Routes = [
+ 
+@@ -769,6 +774,11 @@
+       { path: 'ventas/reportes/analisis_cartera_nuevo', component: AnalisisCarteraClientesNuevoComponent },
+       { path: 'ventas/reportes/antiguadad_saldos_nuevo', component: AntiguedadSaldosNuevoComponent },
+       { path: 'ventas/catalogos/rutasMaestrasClientesNuevo/:tipo', component: RutasMaestrasClientesNuevoComponent },
++      // --- Cobranza IA ---
++      { path: 'ventas/cobranza-ia/bloques', component: BloquesCobranzaIaComponent },
++      { path: 'ventas/cobranza-ia/bloques/:idBloque', component: BloqueDetalleCobranzaIaComponent },
++      { path: 'ventas/cobranza-ia/conversaciones', component: ConversacionesCobranzaIaComponent },
++      { path: 'ventas/cobranza-ia/agente-ia', component: AgenteIaChatCobranzaIaComponent },
+     ],
+     canActivate: [AuthGuard]
+   },

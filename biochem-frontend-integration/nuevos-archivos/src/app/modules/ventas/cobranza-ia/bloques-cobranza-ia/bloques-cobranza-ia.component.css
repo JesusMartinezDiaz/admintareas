@@ -1,0 +1,11 @@
+.lbl-mini {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6c757d;
+  margin-bottom: 2px;
+  display: block;
+}
+.crear-bloque-form {
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+}

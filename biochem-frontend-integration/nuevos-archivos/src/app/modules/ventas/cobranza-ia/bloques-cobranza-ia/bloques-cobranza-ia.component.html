@@ -1,0 +1,107 @@
+<div class="card-body">
+
+  <ngx-spinner bdColor="rgba(240, 255, 240, 0.8)" bdOpacity="0.8" color="#333" fullScreen="false" size="medium" type="square-loader">
+    <p style="color: Black">Espere...</p>
+  </ngx-spinner>
+
+  <h4 class="mb-3">Cobranza IA · Bloques de envío por ruta</h4>
+
+  <!-- Filtros -->
+  <div class="card border-0 shadow-sm mb-4 filtros-card">
+    <div class="card-body py-3">
+      <div class="row align-items-end">
+
+        <div class="col-12 col-md-3 mb-2">
+          <label class="lbl-mini">Compañía</label>
+          <select class="form-control form-control-sm" [(ngModel)]="idCompania">
+            <option [ngValue]="19">Biochem Systems</option>
+            <option [ngValue]="20">All 4 Pet's</option>
+          </select>
+        </div>
+
+        <div class="col-12 col-md-3 mb-2">
+          <label class="lbl-mini">Ruta (id_cat_rutas)</label>
+          <input type="number" class="form-control form-control-sm" [(ngModel)]="idRuta" placeholder="ej. 12" />
+        </div>
+
+        <div class="col-12 col-md-3 mb-2">
+          <label class="lbl-mini">Días mínimo vencido</label>
+          <input type="number" class="form-control form-control-sm" [(ngModel)]="diasMinVencido" />
+        </div>
+
+        <div class="col-12 col-md-3 mb-2">
+          <button class="btn btn-success btn-sm btn-block" (click)="buscarCarteraVencida()">
+            <em class="fa fa-search mr-1"></em> Buscar cartera vencida
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bloques existentes -->
+  <div class="card border-0 shadow-sm mb-4" *ngIf="bloques && bloques.length > 0">
+    <div class="card-body">
+      <h6>Bloques existentes de esta ruta</h6>
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr><th>Nombre</th><th>Estatus</th><th>Lote</th><th>Intervalo (s)</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of bloques">
+            <td>{{ b.nombre }}</td>
+            <td><span class="badge badge-secondary">{{ b.estatus }}</span></td>
+            <td>{{ b.loteTamanio }}</td>
+            <td>{{ b.intervaloSegundosLote }}</td>
+            <td><button class="btn btn-outline-primary btn-sm" (click)="irABloque(b.idBloque)">Administrar</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Cartera vencida -->
+  <div class="card border-0 shadow-sm" *ngIf="cartera && cartera.length > 0">
+    <div class="card-body">
+      <h6>Cartera vencida ({{ cartera.length }} clientes)</h6>
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr><th></th><th>Cliente</th><th>Saldo</th><th>Días vencido</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of cartera">
+            <td><input type="checkbox" [checked]="seleccionados[c.idCliente]" (change)="toggleCliente(c.idCliente)" /></td>
+            <td>{{ c.nombreComercial || c.nombreCliente }}</td>
+            <td>{{ c.saldoTotal | currency:'MXN':'symbol':'1.2-2' }}</td>
+            <td>{{ c.diasVencidoMax || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="row align-items-end mt-3 crear-bloque-form">
+        <div class="col-12 col-md-4 mb-2">
+          <label class="lbl-mini">Nombre del bloque</label>
+          <input class="form-control form-control-sm" [(ngModel)]="nuevoBloqueNombre" placeholder="ej. Ruta 12 - Semana 37" />
+        </div>
+        <div class="col-12 col-md-2 mb-2">
+          <label class="lbl-mini">id_plantilla</label>
+          <input type="number" class="form-control form-control-sm" [(ngModel)]="nuevoBloqueIdPlantilla" />
+        </div>
+        <div class="col-12 col-md-2 mb-2">
+          <label class="lbl-mini">Tamaño de lote</label>
+          <input type="number" class="form-control form-control-sm" [(ngModel)]="loteTamanio" />
+        </div>
+        <div class="col-12 col-md-2 mb-2">
+          <label class="lbl-mini">Intervalo (s)</label>
+          <input type="number" class="form-control form-control-sm" [(ngModel)]="intervaloSegundosLote" />
+        </div>
+        <div class="col-12 col-md-2 mb-2">
+          <button class="btn btn-primary btn-sm btn-block" (click)="crearBloqueConSeleccion()" [disabled]="totalSeleccionados === 0">
+            Crear bloque ({{ totalSeleccionados }})
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

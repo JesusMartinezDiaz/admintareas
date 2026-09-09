@@ -1,0 +1,9 @@
+--- a/src/environments/environment.prod.ts
++++ b/src/environments/environment.prod.ts
+@@ -12,4 +12,6 @@
+   contaAws: 'https://back.a4pets.com.mx/apibackendcontabilidad',
+   nominaAws: 'https://back.a4pets.com.mx/apibackendrecursoshumanos',
+ 
++  cobranzaIA: 'https://back.a4pets.com.mx/apibackendcobranzaia',
++
+ };

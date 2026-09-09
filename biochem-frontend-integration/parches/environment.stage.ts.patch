@@ -1,0 +1,12 @@
+--- a/src/environments/environment.stage.ts
++++ b/src/environments/environment.stage.ts
+@@ -4,6 +4,8 @@
+   contabilidad: 'http://192.168.203.8:8181/apiBackendContabilidad',
+   nomina: 'http://192.168.203.8:8181/apiRooBackendNomina',
+   ventas: 'http://192.168.203.8:8181/apiRooBackendVentas',
+-  seguridad: 'http://192.168.203.8:8181/seguridad'// login
++  seguridad: 'http://192.168.203.8:8181/seguridad',// login
++
++  cobranzaIA: 'http://192.168.203.8:8181/apibackendcobranzaia',
+ };
+ 

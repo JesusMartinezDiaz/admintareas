@@ -1,0 +1,13 @@
+--- a/src/environments/environment.ts
++++ b/src/environments/environment.ts
+@@ -13,7 +13,9 @@
+   ventas: 'http://www.sybrem.com.mx:9191/apiRooBackendVentas',
+   //ventas: 'http://localhost:8090',
+ 
+-  seguridad: 'http://www.sybrem.com.mx:9191/seguridad'// login
++  seguridad: 'http://www.sybrem.com.mx:9191/seguridad',// login
++
++  cobranzaIA: 'http://localhost:8081/cobranza-ia',
+ };
+ 
+ /*
