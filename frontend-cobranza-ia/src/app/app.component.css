@@ -1,0 +1,32 @@
+.shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+.sidebar {
+  background: #0f5132;
+  color: white;
+  padding: 20px 16px;
+}
+.sidebar h1 {
+  font-size: 1.05rem;
+  margin: 0 0 20px;
+}
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sidebar a {
+  color: #e7f4ec;
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+.sidebar a.active, .sidebar a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+.content {
+  padding: 24px 32px;
+}

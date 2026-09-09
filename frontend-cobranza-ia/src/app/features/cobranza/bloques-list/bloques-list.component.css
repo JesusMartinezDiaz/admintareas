@@ -1,0 +1,18 @@
+.filtros {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.filtros label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+.crear-bloque {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

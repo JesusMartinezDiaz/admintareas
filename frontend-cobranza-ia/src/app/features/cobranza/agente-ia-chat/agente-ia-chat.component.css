@@ -1,0 +1,41 @@
+.hint {
+  color: #555;
+  margin-top: -8px;
+}
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+}
+.turnos {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.turno {
+  background: #eef1f3;
+  border-radius: 8px;
+  padding: 8px 12px;
+  max-width: 75%;
+}
+.turno.io {
+  align-self: flex-start;
+  background: #d1e7dd;
+}
+.turno:not(.io) {
+  align-self: flex-end;
+}
+.turno p {
+  margin: 2px 0 0;
+  white-space: pre-wrap;
+}
+.entrada {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.entrada input {
+  flex: 1;
+}

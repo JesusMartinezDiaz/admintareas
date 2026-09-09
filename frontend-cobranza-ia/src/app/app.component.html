@@ -1,0 +1,13 @@
+<div class="shell">
+  <aside class="sidebar">
+    <h1>{{ title }}</h1>
+    <nav>
+      <a routerLink="/bloques" routerLinkActive="active">Bloques de envío</a>
+      <a routerLink="/conversaciones" routerLinkActive="active">Conversaciones</a>
+      <a routerLink="/agente-ia" routerLinkActive="active">Agente IA de cartera</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

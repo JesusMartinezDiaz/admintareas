@@ -1,0 +1,54 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /cobranza-ia
+
+spring:
+  application:
+    name: cobranza-ia
+  datasource:
+    # Misma base de datos que apibackendventas (para poder consultar
+    # vnt_cat_clientes, vnt_cat_rutas, edo_cta_biochem, etc.)
+    url: ${DB_URL:jdbc:mysql://localhost:3306/biochem_ventas?useSSL=false&serverTimezone=America/Mexico_City}
+    username: ${DB_USER:cobranza_ia_app}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    hibernate:
+      # ddl-auto=none: el esquema se controla 100% con Flyway (db/migrations)
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  flyway:
+    enabled: true
+    locations: filesystem:../db/migrations
+    baseline-on-migrate: true
+
+whatsapp:
+  cloud-api:
+    base-url: https://graph.facebook.com/v20.0
+    phone-number-id: ${WHATSAPP_PHONE_NUMBER_ID:}
+    access-token: ${WHATSAPP_ACCESS_TOKEN:}
+    webhook-verify-token: ${WHATSAPP_WEBHOOK_VERIFY_TOKEN:}
+    app-secret: ${WHATSAPP_APP_SECRET:}
+
+anthropic:
+  api-key: ${ANTHROPIC_API_KEY:}
+  modelo-conversacional: claude-opus-5
+  modelo-agente-datos: claude-opus-5
+
+ventas-api:
+  base-url: ${VENTAS_API_BASE_URL:http://localhost:8080/apibackendventas}
+  api-key: ${VENTAS_API_KEY:}
+
+cobranza:
+  compania-default: 19 # BIOCHEM SYSTEMS
+  dias-vencido-para-contacto: 1
+  monto-max-nota-credito-auto-sin-aprobacion: 1500.00
+
+logging:
+  level:
+    mx.com.biochemsystems.cobranzaia: DEBUG
