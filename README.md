@@ -13,6 +13,10 @@ terminado**. Compila y arranca, pero varias integraciones externas
 (WhatsApp, aplicación real de pagos en ventas) están dejadas como stubs
 explícitos — ver "Qué falta" más abajo.
 
+**¿Quieres correrlo ya?** Ver [`RUN_LOCAL.md`](./RUN_LOCAL.md) — guía
+validada paso a paso (Docker Compose o Maven/MySQL directo), con los
+bugs reales que salieron al probarlo y su fix ya aplicado en el repo.
+
 ## Estructura del repo
 
 ```
