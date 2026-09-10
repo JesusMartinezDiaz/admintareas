@@ -1,0 +1,74 @@
+# Entorno de desarrollo local para el agente de cobranza IA, con datos
+# SINTÉTICOS (no la base de datos real de Biochem) y el backend de
+# ventas en modo "mock" (perfil local-mock: no necesita apibackendventas
+# corriendo). Uso:
+#
+#   docker compose up --build
+#
+# Backend disponible en http://localhost:8081/cobranza-ia
+# (ver README.md y backend-cobranza-ia/src/main/resources/application-local.yml
+# para correrlo sin Docker, directo con Maven).
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootlocal123
+      MYSQL_DATABASE: biochem_local
+      MYSQL_USER: cobranza_ia_app
+      MYSQL_PASSWORD: localdev123
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./db/local-dev/01_schema_ventas_minimo.sql:/docker-entrypoint-initdb.d/01_schema_ventas_minimo.sql:ro
+      - ./db/local-dev/02_seed_datos_ejemplo.sql:/docker-entrypoint-initdb.d/02_seed_datos_ejemplo.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootlocal123"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend-cobranza-ia:
+    build:
+      context: .
+      dockerfile: backend-cobranza-ia/Dockerfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: local-mock
+      DB_URL: jdbc:mysql://mysql:3306/biochem_local?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Mexico_City
+      DB_USER: cobranza_ia_app
+      DB_PASSWORD: localdev123
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-sk-ant-dummy-local}
+      WHATSAPP_PHONE_NUMBER_ID: "0000000000"
+      WHATSAPP_ACCESS_TOKEN: "dummy-local-token"
+      WHATSAPP_WEBHOOK_VERIFY_TOKEN: "dev-verify-token"
+      WHATSAPP_APP_SECRET: "dev-app-secret"
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/cobranza-ia/conversaciones/pendientes-atencion"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  # Carga cob_telefono_cliente (tabla de cobranza-ia) DESPUÉS de que el
+  # backend ya corrió Flyway y creó las tablas cob_*. Se ejecuta una sola
+  # vez y termina (no es un servicio de larga duración).
+  seed-cobranza-ia:
+    image: mysql:8.0
+    depends_on:
+      backend-cobranza-ia:
+        condition: service_healthy
+    volumes:
+      - ./db/local-dev/03_seed_cobranza_ia_dev.sql:/seed.sql:ro
+    entrypoint: >
+      sh -c "mysql -hmysql -ucobranza_ia_app -plocaldev123 biochem_local < /seed.sql &&
+             echo 'Seed de cobranza-ia aplicado.'"
+    restart: "no"
+
+volumes:
+  db-data:

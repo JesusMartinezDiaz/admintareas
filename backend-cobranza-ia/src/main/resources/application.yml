@@ -26,6 +26,14 @@ spring:
     enabled: true
     locations: filesystem:../db/migrations
     baseline-on-migrate: true
+    # Con baseline-on-migrate en un esquema vacío, Flyway por default asume
+    # la versión 1 como ya aplicada y SALTA V1 - bajamos la baseline a 0
+    # para que V1 (que crea las tablas cob_*) sí se ejecute.
+    baseline-version: 0
+    # Las plantillas de WhatsApp usan literales "${{n}}" en su texto de
+    # ejemplo (V2__cobranza_ia_seed_dev.sql); sin esto Flyway intenta
+    # resolverlos como su propio placeholder ${...} y falla el arranque.
+    placeholder-replacement: false
 
 whatsapp:
   cloud-api:

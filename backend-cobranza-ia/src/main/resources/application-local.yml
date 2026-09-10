@@ -1,0 +1,24 @@
+# Perfil de desarrollo local: MySQL/MariaDB local con datos sintéticos
+# (ver db/local-dev/) y VentasApiClient en modo mock (no requiere tener
+# apibackendventas corriendo). Activar con:
+#   mvn spring-boot:run -Dspring-boot.run.profiles=local,local-mock
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/biochem_local?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Mexico_City
+    username: cobranza_ia_app
+    password: localdev123
+  flyway:
+    locations: filesystem:../db/migrations
+
+whatsapp:
+  cloud-api:
+    phone-number-id: "0000000000"
+    access-token: "dummy-local-token"
+    webhook-verify-token: "dev-verify-token"
+    app-secret: "dev-app-secret"
+
+anthropic:
+  api-key: ${ANTHROPIC_API_KEY:sk-ant-dummy-local}
+
+ventas-api:
+  base-url: http://localhost:8090/apibackendventas

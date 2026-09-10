@@ -87,27 +87,51 @@ public class CarteraConsultaServiceImpl implements CarteraConsultaService {
 
     @SuppressWarnings("unchecked")
     private ClienteCarteraDTO mapearFila(Map<String, Object> fila, Long idRutaFiltro) {
-        // Los nombres de campo exactos dependen del DTO serializado por
-        // AntiguedadSaldosDTO en apibackendventas; se mapean de forma
-        // defensiva porque, según el análisis del backend, esos nombres
-        // no siempre corresponden a su rango real (ver README).
+        // AntiguedadSaldosDTO (apibackendventas) serializa TODO como String,
+        // incluido idCliente y los montos (saldoTotal, saldo30, saldo60, ...) -
+        // numeroOrNull/decimalOrNull parsean ambos casos (Number o String).
+        // No expone un conteo de "días vencido" real, por eso diasVencidoMax
+        // queda null aquí (el filtro por diasMinVencido se vuelve un no-op;
+        // ver TODO en CarteraConsultaService sobre reemplazarlo por montoVencido).
         return ClienteCarteraDTO.builder()
                 .idCliente(numeroOrNull(fila.get("idCliente")))
                 .nombreCliente((String) fila.getOrDefault("nombreCliente", fila.get("nombre")))
+                .nombreRuta((String) fila.get("ruta"))
+                .idAgente(numeroOrNull(fila.get("agente")))
                 .idRuta(idRutaFiltro)
                 .saldoTotal(decimalOrNull(fila.get("saldoTotal")))
-                .diasVencidoMax(fila.get("diasVencido") != null ? ((Number) fila.get("diasVencido")).intValue() : null)
+                .diasVencidoMax(null)
                 .build();
     }
 
     private Long numeroOrNull(Object valor) {
-        return valor instanceof Number n ? n.longValue() : null;
+        if (valor instanceof Number n) {
+            return n.longValue();
+        }
+        if (valor instanceof String s && !s.isBlank()) {
+            try {
+                return Long.parseLong(s.trim());
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     private BigDecimal decimalOrNull(Object valor) {
         if (valor instanceof BigDecimal bd) {
             return bd;
         }
-        return valor instanceof Number n ? BigDecimal.valueOf(n.doubleValue()) : null;
+        if (valor instanceof Number n) {
+            return BigDecimal.valueOf(n.doubleValue());
+        }
+        if (valor instanceof String s && !s.isBlank()) {
+            try {
+                return new BigDecimal(s.trim());
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
     }
 }
