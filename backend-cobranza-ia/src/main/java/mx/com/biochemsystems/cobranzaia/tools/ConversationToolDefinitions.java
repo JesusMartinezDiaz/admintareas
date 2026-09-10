@@ -53,10 +53,16 @@ public final class ConversationToolDefinitions {
                 .name("evaluar_pronto_pago")
                 .description("Evalúa si el pago que el cliente está reportando (o va a hacer) califica para "
                         + "una nota de crédito por pronto pago, según las reglas vigentes. Úsalo antes de "
-                        + "ofrecer un descuento al cliente; nunca ofrezcas un % de tu propia cuenta.")
+                        + "ofrecer un descuento al cliente; nunca ofrezcas un % de tu propia cuenta. "
+                        + "IMPORTANTE: si el cliente te dice a qué factura corresponde el pago, incluye "
+                        + "idCargoOriginal - sin ese dato la nota de crédito NO se puede aplicar sola aunque "
+                        + "califique, y queda pendiente de que un humano la revise. Con idCargoOriginal y "
+                        + "dentro del tope autorizado, la nota se aplica de inmediato en el sistema de ventas.")
                 .inputSchema(Tool.InputSchema.builder()
                         .properties(Tool.InputSchema.Properties.builder()
-                                .putAdditionalProperty("idCargoOriginal", JsonValue.from(Map.of("type", "integer")))
+                                .putAdditionalProperty("idCargoOriginal", JsonValue.from(Map.of(
+                                        "type", "integer",
+                                        "description", "id_cargo de la factura que el cliente va a pagar, si lo sabes.")))
                                 .putAdditionalProperty("montoFactura", JsonValue.from(Map.of("type", "number")))
                                 .putAdditionalProperty("fechaFactura", JsonValue.from(Map.of("type", "string")))
                                 .putAdditionalProperty("fechaPago", JsonValue.from(Map.of(

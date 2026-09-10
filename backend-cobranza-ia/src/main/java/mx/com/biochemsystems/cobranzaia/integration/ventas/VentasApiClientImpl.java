@@ -2,8 +2,10 @@ package mx.com.biochemsystems.cobranzaia.integration.ventas;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mx.com.biochemsystems.cobranzaia.config.VentasApiProperties;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -19,6 +21,10 @@ public class VentasApiClientImpl implements VentasApiClient {
 
     @Qualifier("ventasApiWebClient")
     private final WebClient ventasApiWebClient;
+    private final JdbcTemplate jdbcTemplate;
+    private final VentasApiProperties ventasApiProperties;
+
+    private volatile Long idTipoDocumentoPagoCache;
 
     // TODO: "línea" (VETERINARIA/AGRICOLA) y "tipoCliente" (CLIENTE/DISTRIBUIDOR)
     // son segmentaciones reales del negocio (ver VntPoliticaComisionesEncabezadoCobranza)
@@ -84,16 +90,76 @@ public class VentasApiClientImpl implements VentasApiClient {
     }
 
     @Override
-    public Long registrarAbono(Long idCliente, Long idCompania, Long idCatDocumento,
-                                BigDecimal monto, String referencia, String comentarios) {
-        // TODO: ajustar la ruta y el payload exacto una vez expuesto el endpoint de
-        // registro de abonos para integraciones externas en apibackendventas
-        // (hoy VntAbonoImpl.saveAbonos se invoca solo desde el propio front de ventas).
-        // Este stub deja explícito el contrato que el agente de cobranza necesita.
-        log.warn("registrarAbono es un stub: falta el endpoint de integración en apibackendventas. "
-                        + "cliente={}, compania={}, monto={}, referencia={}",
-                idCliente, idCompania, monto, referencia);
-        throw new UnsupportedOperationException(
-                "Pendiente de exponer endpoint de aplicación de abonos en apibackendventas");
+    public Long registrarPago(Long idCliente, Long idCompania, Long idAgente, BigDecimal monto,
+                               String cveUsuario, String referencia, String comentarios) {
+        Map<String, Object> body = new java.util.HashMap<>();
+        body.put("idCompania", idCompania);
+        body.put("idCatDocumento", 3L); // pago, ver VntAbonoImpl
+        body.put("idTipoDocumento", resolverIdTipoDocumentoPago());
+        body.put("idCliente", idCliente);
+        body.put("idAgente", idAgente); // si se manda, saveAbonos no exige vntDocumentosAsociaciones
+        body.put("total", monto);
+        body.put("cveUsuario", cveUsuario);
+        body.put("referenciaPagos", referencia != null ? referencia : "");
+        body.put("comentarios", comentarios);
+
+        Map<String, Object> respuesta = ventasApiWebClient.post()
+                .uri("/vntAbono/savePagos")
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+
+        return numeroOrNull(respuesta != null ? respuesta.get("idAbono") : null);
+    }
+
+    @Override
+    public Long aplicarNotaCreditoProntoPago(Long idCargo, BigDecimal montoDescuento, String cveUsuario) {
+        Map<String, Object> body = Map.of(
+                "total", montoDescuento,
+                "cveUsuario", cveUsuario != null ? cveUsuario : "agente-ia"
+        );
+
+        Map<String, Object> respuesta = ventasApiWebClient.post()
+                .uri(uriBuilder -> uriBuilder.path("/vntAbono/saveNotaCreditoPP").queryParam("idCargo", idCargo).build())
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+
+        return numeroOrNull(respuesta != null ? respuesta.get("idAbono") : null);
+    }
+
+    /**
+     * VntAbonoImpl#saveAbonos no fija idTipoDocumento (a diferencia de
+     * idCatDocumento=3): hay que mandar un valor válido de
+     * vnt_cat_tipo_documento para id_cat_documento=3 ("pago"). Si el
+     * negocio confirma cuál usar, fíjalo en
+     * ventas-api.id-tipo-documento-pago; si no, se resuelve el primero
+     * que exista (correcto solo si hay un único tipo de pago genérico).
+     */
+    private Long resolverIdTipoDocumentoPago() {
+        String configurado = ventasApiProperties.getIdTipoDocumentoPago();
+        if (configurado != null && !configurado.isBlank()) {
+            return Long.parseLong(configurado.trim());
+        }
+        if (idTipoDocumentoPagoCache == null) {
+            Long resuelto = jdbcTemplate.queryForObject(
+                    "SELECT id_tipo_documento FROM vnt_cat_tipo_documento WHERE id_cat_documento = 3 ORDER BY id_tipo_documento LIMIT 1",
+                    Long.class);
+            if (resuelto == null) {
+                throw new IllegalStateException(
+                        "No se encontró ningún vnt_cat_tipo_documento con id_cat_documento=3 (pago). "
+                                + "Configura ventas-api.id-tipo-documento-pago explícitamente.");
+            }
+            log.warn("ventas-api.id-tipo-documento-pago no configurado; usando el primero encontrado en "
+                    + "vnt_cat_tipo_documento para pagos: {}. Confirma con negocio si es el correcto.", resuelto);
+            idTipoDocumentoPagoCache = resuelto;
+        }
+        return idTipoDocumentoPagoCache;
+    }
+
+    private Long numeroOrNull(Object valor) {
+        return valor instanceof Number n ? n.longValue() : null;
     }
 }

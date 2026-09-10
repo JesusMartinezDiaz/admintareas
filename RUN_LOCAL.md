@@ -87,11 +87,22 @@ Ver `apibackendventas-local-run/README.md`. Resumen: su
 de WildFly/JBoss); para correrlo suelto hace falta excluir
 `JndiDataSourceAutoConfiguration` explícitamente (poner la propiedad en
 vacío NO alcanza) y darle una URL JDBC directa - ya está armado el
-`application-local.properties` que lo logra, **validado**: el WAR
-arranca completo. Lo que NO se puede reproducir aquí es su base de
-datos real completa (cientos de tablas) - sin un dump de una BD de
-desarrollo/staging, sus endpoints van a responder error contra el
-esquema mínimo.
+`application-local.properties` que lo logra, **validado**: el WAR deja
+de tronar por JNDI y arranca. Lo que NO se puede reproducir aquí es su
+base de datos real completa (cientos de tablas) - sin un dump de una BD
+de desarrollo/staging, sus endpoints responden error contra un esquema
+mínimo.
+
+**Límite de este sandbox**: al intentar una prueba en vivo de
+`POST /vntAbono/savePagos` (con un esquema sintético mínimo agregado a
+mano) el proceso de `apibackendventas` se volvió inestable en este
+entorno - es una aplicación monolítica muy grande y el sandbox tiene
+recursos limitados - y no llegué a una respuesta 200 limpia antes de
+que el proceso terminara. El código de integración (`VentasApiClientImpl`)
+se construyó leyendo el DTO/entidad/endpoint reales de
+`apibackendventas`, así que los nombres de campo y rutas están
+confirmados contra el código fuente; lo que falta es una prueba en vivo
+en un ambiente con más recursos (tu máquina, o un dev/staging real).
 
 ## Frontend (`biochem-systems-front-end`, Angular 6)
 

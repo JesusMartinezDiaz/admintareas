@@ -21,9 +21,13 @@ bugs reales que salieron al probarlo y su fix ya aplicado en el repo.
 
 ```
 admintareas/
-├── backend-cobranza-ia/   Spring Boot (Java 17) - agente IA + orquestación WhatsApp + API admin
-├── frontend-cobranza-ia/  Angular 18 (standalone) - panel de administración
-└── db/migrations/         Flyway - esquema nuevo (tablas cob_*)
+├── backend-cobranza-ia/          Spring Boot (Java 17) - agente IA + orquestación WhatsApp + API admin
+├── biochem-frontend-integration/ Pantallas + parches para el Angular 6 real de Biochem (ver INSTRUCCIONES.md)
+├── apibackendventas-local-run/   Perfil para correr el backend de ventas real fuera de WildFly/JBoss
+├── db/migrations/                Flyway - esquema nuevo (tablas cob_*)
+├── db/local-dev/                 Esquema mínimo + datos sintéticos para desarrollo local
+├── docker-compose.yml            Levanta MySQL + backend-cobranza-ia en modo mock con un comando
+└── RUN_LOCAL.md                  Guía de arranque local, validada paso a paso
 ```
 
 ## Cómo se decidió la arquitectura
@@ -40,12 +44,19 @@ su lógica de negocio. Hallazgos clave que moldearon el diseño:
   ligeramente distintas entre reportes. En vez de reimplementarlas (y
   arriesgar inconsistencias), **este módulo las consume vía HTTP**
   (`VentasApiClient`) y no vuelve a calcular saldos por su cuenta.
-- **No existe "pronto pago" ni nota de crédito automática hoy** en
-  ventas (lo más parecido son comisiones de cobranza escalonadas, que
-  premian al agente, no al cliente). Es lógica nueva de este módulo
-  (`cob_regla_pronto_pago`, `ProntoPagoRuleEngine`) y por diseño **nunca
-  aplica una NDC directamente**: siempre queda en `PROPUESTA` o
-  `REQUIERE_APROBACION` según el tope configurado, para revisión humana.
+- **No existe una "regla de pronto pago" (cuándo/cuánto descontar) hoy**
+  en ventas (lo más parecido son comisiones de cobranza escalonadas, que
+  premian al agente, no al cliente) - esa decisión es lógica nueva de
+  este módulo (`cob_regla_pronto_pago`, `ProntoPagoRuleEngine`). Pero el
+  mecanismo para *aplicar* la nota de crédito **sí existe y ya se usa**:
+  `POST /vntAbono/saveNotaCreditoPP` en `apibackendventas` calcula el
+  prorrateo fiscal (IEPS/IVA) contra una factura específica y descuenta
+  su saldo de inmediato. Este módulo decide el %/monto y quién califica;
+  ventas hace la aplicación fiscal real. Dentro del tope de
+  auto-aprobación (`cobranza.monto-max-nota-credito-auto-sin-aprobacion`)
+  se aplica sola; si lo excede, o si no se identificó la factura, queda
+  `REQUIERE_APROBACION` para que un humano la apruebe desde
+  `POST /notas-credito/{id}/aprobar`.
 - **Identificación de cliente por teléfono** ya existe para llamadas
   Twilio (`TwilioController.normalizarTelefono` + `getClientByTelefono`):
   normaliza a los últimos 10 dígitos y busca en `vnt_cat_clientes`. Se
@@ -113,18 +124,43 @@ Se probó la integración compilando contra `anthropic-java:2.34.0` real
   las respuestas del cliente llegan por el webhook de WhatsApp y las
   procesa el agente conversacional.
 
-## Qué falta (deliberadamente dejado como TODO)
+## Aplicación de pagos y notas de crédito (ya conectado a los endpoints reales)
 
-Este scaffold es honesto sobre lo que no está terminado:
+`VentasApiClient` ya llama a los endpoints reales de `apibackendventas`
+(confirmados leyendo `VntAbonoController`/`VntAbonoImpl` fuente, no
+inventados):
 
-- **`VentasApiClient.registrarAbono(...)` lanza `UnsupportedOperationException`.**
-  `apibackendventas` no expone hoy un endpoint para que un sistema externo
-  registre un abono/NDC (la lógica de folios + conciliación FIFO en
-  `VntAbonoImpl` se invoca solo desde su propio frontend). Hace falta
-  que el equipo de ventas exponga ese endpoint (o un endpoint de
-  integración con API key) antes de que este módulo pueda aplicar pagos
-  o notas de crédito automáticamente. Mientras tanto, todo queda en
-  `PENDIENTE_VALIDACION` / `PROPUESTA` para aplicación manual.
+- **`registrarPago(...)`** → `POST /vntAbono/savePagos`. Un comprobante
+  de pago detectado por visión en WhatsApp **nunca se aplica solo**: la
+  IA solo lo registra (`PENDIENTE_VALIDACION`); un humano lo confirma
+  desde `POST /comprobantes/{id}/aplicar`, que es lo que dispara este
+  llamado real. El riesgo de que la IA lea mal un monto en una foto es
+  demasiado alto para saltarse esa revisión.
+- **`aplicarNotaCreditoProntoPago(...)`** → `POST /vntAbono/saveNotaCreditoPP`.
+  Esta sí se auto-aplica cuando la IA identifica la factura
+  (`idCargoOriginal`) y el descuento cae dentro del tope configurado -
+  es la única automatización de dinero real que corre sin humano en el
+  loop, tal como pediste ("se les puede aplicar... de manera automática,
+  siempre y cuando esté dentro de las reglas").
+
+**Pendiente de confirmar con negocio**: `ventas-api.id-tipo-documento-pago`
+(qué `id_tipo_documento` usar al registrar un pago - `apibackendventas`
+no lo fija solo). Sin configurar, se resuelve dinámicamente consultando
+`vnt_cat_tipo_documento`, lo cual es correcto solo si existe un único
+tipo de pago genérico - revísalo antes de producción.
+
+**Nota sobre validación en esta sesión**: el código de
+`VentasApiClientImpl` se construyó leyendo directamente el DTO/entidad/
+endpoint reales (nombres de campo y rutas exactos, no adivinados).
+Intenté además una prueba en vivo end-to-end contra `apibackendventas`
+corriendo en este sandbox con un esquema mínimo sintético; el proceso
+resultó inestable en este entorno (aplicación muy grande, recursos
+limitados del sandbox) y no llegué a una confirmación 200 limpia antes
+de que el proceso muriera. Recomiendo la primera prueba real contra un
+ambiente de desarrollo/staging de verdad, no replicar este intento aquí.
+
+## Qué más falta (deliberadamente dejado como TODO)
+
 - **Firma del webhook de WhatsApp no verificada** (`X-Hub-Signature-256`)
   — necesario antes de producción.
 - **Sin colas/reintentos** para envío de WhatsApp — para volumen alto,
@@ -135,6 +171,10 @@ Este scaffold es honesto sobre lo que no está terminado:
 - Sin autenticación en los endpoints del propio `cobranza-ia` (pensado
   para exponerse detrás del mismo API Gateway/SSO que ya use el resto
   del sistema).
+- **Sin pantallas en el admin** para la bandeja de comprobantes
+  pendientes (`GET /comprobantes`) ni notas de crédito que requieren
+  aprobación (`GET /notas-credito`) - los endpoints ya existen, falta
+  el Angular. Es el siguiente paso lógico de UI.
 
 ## ¿Puedo conectarme yo directamente a tu base de datos?
 
@@ -174,26 +214,28 @@ export WHATSAPP_PHONE_NUMBER_ID=...
 export WHATSAPP_ACCESS_TOKEN=...
 export WHATSAPP_WEBHOOK_VERIFY_TOKEN=...
 export VENTAS_API_BASE_URL=http://localhost:8080/apibackendventas
+export VENTAS_API_ID_TIPO_DOCUMENTO_PAGO=...   # confirmar con negocio, ver arriba
 mvn spring-boot:run   # aplica db/migrations/*.sql vía Flyway automáticamente
-
-# Frontend
-cd frontend-cobranza-ia
-npm install
-npm start   # http://localhost:4200, apunta a environment.ts (localhost:8081)
 ```
 
-Ambos se validaron en esta sesión: `mvn -q compile` (backend, contra el
-SDK real `anthropic-java:2.34.0`) y `ng build` (frontend) terminan sin
-errores.
+`mvn -q compile` se validó en esta sesión (SDK real `anthropic-java:2.34.0`,
+sin errores). Para correr todo junto sin tocar tu base de datos real, ver
+[`RUN_LOCAL.md`](./RUN_LOCAL.md). Para el frontend real (Angular 6 de
+Biochem, no un scaffold aparte), ver
+[`biochem-frontend-integration/INSTRUCCIONES.md`](./biochem-frontend-integration/INSTRUCCIONES.md).
 
 ## Roadmap sugerido (siguiente)
 
-1. Exponer en `apibackendventas` un endpoint de integración para aplicar
-   abonos/NDC (con API key), y quitar el stub de `VentasApiClient`.
-2. Cargar `cob_telefono_cliente` desde los teléfonos existentes +
+1. Confirmar con negocio `ventas-api.id-tipo-documento-pago` y los
+   umbrales reales de `cob_regla_pronto_pago` (hoy hay un ejemplo de 3%
+   a 5 días en `db/migrations/V2__...seed_dev.sql`).
+2. Probar `registrarPago`/`aplicarNotaCreditoProntoPago` contra un
+   ambiente de desarrollo/staging real de `apibackendventas` (ver nota
+   arriba sobre por qué no se pudo validar en vivo en este sandbox).
+3. Pantallas de admin para la bandeja de comprobantes pendientes y
+   notas de crédito que requieren aprobación (los endpoints ya existen).
+4. Cargar `cob_telefono_cliente` desde los teléfonos existentes +
    confirmar opt-in de WhatsApp por cliente (requisito legal de Meta).
-3. Verificar firma de webhook + mover el procesamiento a una cola.
-4. Definir en negocio los umbrales reales de `cob_regla_pronto_pago`
-   (hoy hay un ejemplo de 3% a 5 días en `db/migrations/V2__...seed_dev.sql`).
-5. Pruebas end-to-end con el WhatsApp Business Sandbox de Meta antes de
+5. Verificar firma de webhook + mover el procesamiento a una cola.
+6. Pruebas end-to-end con el WhatsApp Business Sandbox de Meta antes de
    pedir el número de producción.

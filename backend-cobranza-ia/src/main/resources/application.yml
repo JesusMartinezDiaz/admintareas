@@ -51,6 +51,10 @@ anthropic:
 ventas-api:
   base-url: ${VENTAS_API_BASE_URL:http://localhost:8080/apibackendventas}
   api-key: ${VENTAS_API_KEY:}
+  # id_tipo_documento para pagos (vnt_cat_tipo_documento, id_cat_documento=3).
+  # Sin confirmar con negocio; si se deja vacío, se resuelve dinámicamente
+  # (ver VentasApiClientImpl#resolverIdTipoDocumentoPago).
+  id-tipo-documento-pago: ${VENTAS_API_ID_TIPO_DOCUMENTO_PAGO:}
 
 cobranza:
   compania-default: 19 # BIOCHEM SYSTEMS

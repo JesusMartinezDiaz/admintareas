@@ -62,9 +62,14 @@ public class MockVentasApiClientImpl implements VentasApiClient {
     }
 
     @Override
-    public Long registrarAbono(Long idCliente, Long idCompania, Long idCatDocumento,
-                                BigDecimal monto, String referencia, String comentarios) {
+    public Long registrarPago(Long idCliente, Long idCompania, Long idAgente, BigDecimal monto,
+                               String cveUsuario, String referencia, String comentarios) {
         // En modo mock simplemente simula un id de abono generado.
+        return System.currentTimeMillis();
+    }
+
+    @Override
+    public Long aplicarNotaCreditoProntoPago(Long idCargo, BigDecimal montoDescuento, String cveUsuario) {
         return System.currentTimeMillis();
     }
 }
