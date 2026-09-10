@@ -101,9 +101,25 @@ parches. Para correrlo:
 ```bash
 nvm install 10.24.1 && nvm use 10.24.1   # Angular 6/CLI 6-7 no corren con Node 18+/22
 npm install
+npm install --no-save @types/jquery@3.3.31   # ver "Hallazgo" abajo, si no aplica el fix permanente
 npm start   # ng serve, http://localhost:4200
 ```
 
 Ajusta `src/environments/environment.ts` -> `cobranzaIA` a
 `http://localhost:8081/cobranza-ia` (u otra URL si usaste Docker con
 otro puerto).
+
+**Validado en esta sesión**: `npm install` + `ng build --prod` con los
+4 componentes de cobranza-ia y los 7 parches ya aplicados -> **cero
+errores de compilación atribuibles a este cambio**. Los ~160 errores
+que sí salen son 100% pre-existentes en el proyecto (namespace
+`DataTables`, `file-saver`, dos servicios de `inventarios` faltantes en
+el zip, `redirectUri` sin declarar en `environment.ts`) - no se tocaron.
+
+**Hallazgo aparte, no relacionado a cobranza-ia**: `package.json` fija
+`@types/jquery` en `^3.3.29`, pero un `npm install` fresco hoy resuelve
+`3.5.34` (mucho más nueva), cuyo `.d.ts` usa sintaxis de TypeScript que
+el compilador de este proyecto (3.2.4) ni siquiera puede parsear -
+tronaría el build de cualquiera que instale el proyecto desde cero.
+`npm install --no-save @types/jquery@3.3.31` lo resuelve (o fija esa
+versión en `package.json` para que quede permanente).

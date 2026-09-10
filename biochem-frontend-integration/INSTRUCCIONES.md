@@ -72,22 +72,45 @@ misma base de datos de ventas — ver su `README.md` (raíz del repo) para
 variables de entorno (`ANTHROPIC_API_KEY`, `WHATSAPP_*`, `VENTAS_API_BASE_URL`,
 `DB_URL`, etc.).
 
-## 4. Lo que NO pude validar en esta sesión
+## 4. Validado de verdad en esta sesión
 
-Tu proyecto es Angular 6 con dependencias de 2018-2019; este entorno
-tiene Node 22, que **no es compatible** con Angular CLI 6/7 (`ng build`
-probablemente fallaría solo por versión de Node, no por el código
-nuevo). Por eso **no corrí `npm install`/`ng build` de tu proyecto real**
-— sí validé que los parches aplican sin conflictos, y los componentes
-nuevos siguen exactamente los patrones (imports, inyección de
-servicios, `NgModule` global) de los componentes reales que ya
-compilan en tu proyecto (`estado-cuenta-general`, `estado-cuenta.service.ts`).
+Instalé Node 10.24.1 (vía `nvm`, Angular CLI 6/7 no corre con Node
+18+/22), hice `npm install` de tu proyecto real y corrí
+`ng build --prod` con estos 4 componentes + el servicio ya copiados y
+los 7 parches ya aplicados. **Resultado: cero errores atribuibles a
+`cobranza-ia`** - los ~160 errores que sí salen son 100% pre-existentes
+en tu proyecto (namespace `DataTables` no configurado en varios
+módulos, `file-saver` sin instalar, dos servicios de `inventarios` que
+no vinieron en el zip que subiste, y `environment.ts` sin la propiedad
+`redirectUri` que sí usa `auth-service.ts`) - no tienen nada que ver con
+este cambio, y no los toqué.
 
-**Recomendación**: aplica los cambios en tu máquina/CI donde sí tengas
-el Node/Angular CLI correcto para este proyecto, corre `ng build`, y si
-sale algún error de compilación (typos, un import mal resuelto, etc.)
-pégamelo y lo corrijo de inmediato — es mucho más rápido corregir un
-error puntual de `tsc` que tratar de replicar tu toolchain viejo aquí.
+### Bug real que sí es mío (ya corregido en los archivos de este paquete)
+
+Usé la API nueva de SweetAlert2 (`Swal.fire({ icon: 'warning', ... })`)
+pero tu proyecto tiene una versión más vieja cuyos tipos usan `type` en
+vez de `icon`. Ya está corregido en
+`bloque-detalle-cobranza-ia.component.ts` y
+`conversaciones-cobranza-ia.component.ts`.
+
+### Hallazgo aparte, no relacionado a este cambio (para que no te sorprenda)
+
+Tu `package.json` fija `@types/jquery` en `^3.3.29`, pero un `npm
+install` fresco HOY resuelve esa versión a `3.5.34` (publicada varios
+años después), cuyo `.d.ts` usa sintaxis de TypeScript que el
+compilador que trae este proyecto (TypeScript 3.2.4) no puede ni
+parsear - el build truena antes de llegar a tu propio código, con
+errores en `node_modules/@types/jquery/misc.d.ts`. Esto no lo causó
+este cambio y le pasaría a cualquiera que instale el proyecto desde
+cero hoy. El fix que validé:
+
+```bash
+npm install --no-save @types/jquery@3.3.31
+```
+
+(o fijar esa versión exacta en `package.json` para que quede
+permanente). `skipLibCheck: true` en `tsconfig.json` NO alcanza porque
+es un error de sintaxis (parseo), no de chequeo de tipos.
 
 ## 5. Pendiente para que sea 100% funcional
 

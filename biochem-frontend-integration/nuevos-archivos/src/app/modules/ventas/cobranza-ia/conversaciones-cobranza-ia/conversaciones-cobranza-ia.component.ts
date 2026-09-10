@@ -43,7 +43,7 @@ export class ConversacionesCobranzaIaComponent implements OnInit {
     }
     Swal.fire({
       title: '¿Cerrar esta conversación?',
-      icon: 'question',
+      type: 'question',
       showCancelButton: true,
       confirmButtonText: 'Sí, cerrar',
       cancelButtonText: 'Cancelar',

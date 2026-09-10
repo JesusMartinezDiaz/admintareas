@@ -64,7 +64,7 @@ export class BloqueDetalleCobranzaIaComponent implements OnInit {
   quitar(idCliente: number): void {
     Swal.fire({
       title: '¿Quitar cliente del bloque?',
-      icon: 'warning',
+      type: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, quitar',
       cancelButtonText: 'Cancelar',
