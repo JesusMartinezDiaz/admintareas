@@ -1,0 +1,3 @@
+<?php
+require_once __DIR__ . '/_init.php';
+sat_requiere_admin(); $id=(int)($_POST['id_empresa']??0);$num=mysqli_real_escape_string($con,trim($_POST['numero_cuenta']??''));$nom=mysqli_real_escape_string($con,trim($_POST['nombre']??''));$agr=trim($_POST['codigo_agrupador']??'');$nat=in_array($_POST['naturaleza']??'',array('D','A'),true)?$_POST['naturaleza']:'D';$tipo=mysqli_real_escape_string($con,$_POST['tipo_cuenta']??'GASTO');$agrSql=$agr===''?'NULL':"'".mysqli_real_escape_string($con,$agr)."'";mysqli_query($con,"INSERT INTO sat_cuentas_contables(id_empresa,numero_cuenta,nombre,codigo_agrupador,naturaleza,tipo_cuenta) VALUES($id,'$num','$nom',$agrSql,'$nat','$tipo')");header('Location: ../cuentas_contables.php?id_empresa='.$id);

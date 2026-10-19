@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" Version="3.3" Serie="F" Folio="77" Fecha="2026-09-12T10:00:00" SubTotal="2500.00" Moneda="MXN" Total="2820.00" TipoDeComprobante="I" MetodoPago="PUE" FormaPago="03" LugarExpedicion="64000">
+<cfdi:Emisor Rfc="PRO010101CCC" Nombre="PROVEEDOR UNO" RegimenFiscal="601"/>
+<cfdi:Receptor Rfc="EKU9003173C9" Nombre="EMPRESA DEMO" UsoCFDI="G03"/>
+<cfdi:Conceptos>
+<cfdi:Concepto ClaveProdServ="15101514" Cantidad="1" ClaveUnidad="LTR" Descripcion="Gasolina" ValorUnitario="2000.00" Importe="2000.00"><cfdi:Impuestos><cfdi:Traslados><cfdi:Traslado Base="2000.00" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="320.00"/></cfdi:Traslados></cfdi:Impuestos></cfdi:Concepto>
+<cfdi:Concepto ClaveProdServ="50000000" Cantidad="1" ClaveUnidad="H87" Descripcion="Alimentos" ValorUnitario="500.00" Importe="500.00"><cfdi:Impuestos><cfdi:Traslados><cfdi:Traslado Base="500.00" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.000000" Importe="0.00"/></cfdi:Traslados></cfdi:Impuestos></cfdi:Concepto>
+</cfdi:Conceptos>
+<cfdi:Impuestos TotalImpuestosTrasladados="320.00"><cfdi:Traslados><cfdi:Traslado Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="320.00"/><cfdi:Traslado Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.000000" Importe="0.00"/></cfdi:Traslados></cfdi:Impuestos>
+<cfdi:Complemento><tfd:TimbreFiscalDigital Version="1.1" UUID="22222222-2222-2222-2222-000000000001" FechaTimbrado="2026-09-12T10:01:00"/></cfdi:Complemento>
+</cfdi:Comprobante>

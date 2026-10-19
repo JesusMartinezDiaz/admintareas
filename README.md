@@ -26,6 +26,7 @@ admintareas/
 ├── apibackendventas-local-run/   Perfil para correr el backend de ventas real fuera de WildFly/JBoss
 ├── db/migrations/                Flyway - esquema nuevo (tablas cob_*)
 ├── db/local-dev/                 Esquema mínimo + datos sintéticos para desarrollo local
+├── modulo-sat/                   Módulo PHP: descarga masiva SAT programable + reporte fiscal (ver modulo-sat/README.md)
 ├── docker-compose.yml            Levanta MySQL + backend-cobranza-ia en modo mock con un comando
 └── RUN_LOCAL.md                  Guía de arranque local, validada paso a paso
 ```

@@ -1,0 +1,7 @@
+config/sat_config.php
+uploads/certificados/*
+uploads/paquetes/*
+uploads/xml/*
+!uploads/*/.gitkeep
+logs/*
+!logs/.htaccess

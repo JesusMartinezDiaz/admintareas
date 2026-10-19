@@ -1,0 +1,120 @@
+/* Módulo SAT. Estilos con prefijo .sat-* para no chocar con el sistema
+   (funciona con Bootstrap 3 o 5, que es lo que cargue head.php). */
+.sat-modulo { padding-bottom: 30px; }
+.sat-titulo h2 { margin: 15px 0 12px; font-size: 22px; font-weight: 700; }
+.sat-titulo h2 .fa { color: #2563eb; }
+
+.sat-tabs { list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; border-bottom: 1px solid #e5e7eb; }
+.sat-tabs li a { display: block; padding: 8px 14px; border-radius: 8px 8px 0 0; color: #4b5563; text-decoration: none; font-weight: 600; font-size: 13px; }
+.sat-tabs li a:hover { background: #f3f4f6; color: #111827; }
+.sat-tabs li.active a { background: #fff; color: #2563eb; border: 1px solid #e5e7eb; border-bottom-color: #fff; margin-bottom: -1px; }
+
+.sat-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+.sat-card h4, .sat-card h5 { margin-top: 0; font-weight: 700; }
+.sat-card .sat-sub { color: #6b7280; font-size: 12px; margin-top: -6px; margin-bottom: 10px; }
+.sat-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+
+.sat-kpis { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.sat-kpi { flex: 1 1 180px; background: #fff; border: 1px solid #e5e7eb; border-left: 4px solid #2563eb; border-radius: 10px; padding: 12px 14px; }
+.sat-kpi .t { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: .4px; font-weight: 700; }
+.sat-kpi .v { font-size: 22px; font-weight: 700; margin-top: 2px; white-space: nowrap; }
+.sat-kpi .d { font-size: 12px; color: #6b7280; }
+.sat-kpi.verde { border-left-color: #16a34a; } .sat-kpi.verde .v { color: #15803d; }
+.sat-kpi.rojo { border-left-color: #dc2626; } .sat-kpi.rojo .v { color: #b91c1c; }
+.sat-kpi.morado { border-left-color: #7c3aed; }
+.sat-kpi.ambar { border-left-color: #d97706; }
+
+.sat-form label { font-weight: 600; font-size: 12px; color: #374151; margin-bottom: 3px; display: block; }
+.sat-form .form-control { height: 36px; border-radius: 6px; }
+.sat-form textarea.form-control { height: auto; }
+.sat-form .sat-campo { margin-bottom: 10px; }
+.sat-form .sat-check { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; margin-right: 14px; cursor: pointer; }
+.sat-form .sat-check input { margin: 0; }
+.sat-ayuda { font-size: 12px; color: #6b7280; margin-top: 3px; }
+.sat-acciones { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+.sat-tabla { width: 100%; background: #fff; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+.sat-tabla th { background: #f9fafb; color: #374151; font-size: 11px; text-transform: uppercase; letter-spacing: .3px; padding: 8px; border-bottom: 1px solid #e5e7eb; white-space: nowrap; text-align: left; }
+.sat-tabla td { padding: 8px; border-top: 1px solid #f1f5f9; vertical-align: middle; }
+.sat-tabla tbody tr:hover { background: #fafafa; }
+.sat-tabla .num, .sat-tabla th.num { text-align: right; white-space: nowrap; }
+.sat-tabla tr.total td { font-weight: 700; background: #f9fafb; border-top: 2px solid #e5e7eb; }
+.sat-tabla tr.cancelado td { color: #9ca3af; text-decoration: line-through; }
+.sat-tabla small { color: #6b7280; }
+.sat-scroll { overflow-x: auto; }
+.sat-uuid { font-family: monospace; font-size: 11px; }
+
+.sat-badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: #eef2ff; color: #3730a3; white-space: nowrap; }
+.sat-badge.ok { background: #dcfce7; color: #166534; }
+.sat-badge.warn { background: #fef3c7; color: #92400e; }
+.sat-badge.err { background: #fee2e2; color: #991b1b; }
+.sat-badge.gris { background: #f3f4f6; color: #4b5563; }
+.sat-badge.azul { background: #dbeafe; color: #1e40af; }
+
+.sat-alert { padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 13px; border: 1px solid transparent; }
+.sat-alert-info { background: #eff6ff; border-color: #bfdbfe; color: #1e3a8a; }
+.sat-alert-warning { background: #fffbeb; border-color: #fde68a; color: #78350f; }
+.sat-alert-danger { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
+.sat-alert-success { background: #f0fdf4; border-color: #bbf7d0; color: #14532d; }
+
+.sat-dias { display: flex; gap: 6px; flex-wrap: wrap; }
+.sat-dias label { border: 1px solid #d1d5db; border-radius: 6px; padding: 4px 9px; cursor: pointer; font-weight: 600; font-size: 12px; margin: 0; }
+.sat-dias input { display: none; }
+.sat-dias input:checked + span { color: #fff; }
+.sat-dias label.on { background: #2563eb; border-color: #2563eb; color: #fff; }
+
+.sat-code { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 8px; font-family: monospace; font-size: 12px; overflow-x: auto; white-space: pre; }
+.sat-preview { background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+.sat-preview ul { margin: 4px 0 0; padding-left: 18px; }
+
+.sat-subtabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+.sat-subtabs a { padding: 6px 12px; border-radius: 6px; background: #f3f4f6; color: #374151; font-weight: 600; font-size: 13px; text-decoration: none; cursor: pointer; }
+.sat-subtabs a.active { background: #2563eb; color: #fff; }
+.sat-panel { display: none; }
+.sat-panel.active { display: block; }
+
+.sat-cargando { color: #6b7280; padding: 20px; text-align: center; }
+.sat-vacio { color: #9ca3af; padding: 16px; text-align: center; }
+.text-pos { color: #15803d; } .text-neg { color: #b91c1c; }
+
+/* Modal propio (independiente de la versión de Bootstrap del sistema) */
+.sat-modal { position: fixed; inset: 0; background: rgba(15,23,42,.45); display: none; z-index: 10500; overflow-y: auto; padding: 30px 12px; }
+.sat-modal.open { display: block; }
+.sat-modal-box { background: #fff; border-radius: 12px; max-width: 760px; margin: 0 auto; box-shadow: 0 20px 50px rgba(0,0,0,.25); }
+.sat-modal-box.lg { max-width: 1000px; }
+.sat-modal-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid #e5e7eb; }
+.sat-modal-head h4 { margin: 0; font-size: 17px; font-weight: 700; }
+.sat-modal-head .sat-x { background: none; border: 0; font-size: 22px; line-height: 1; color: #6b7280; cursor: pointer; }
+.sat-modal-body { padding: 16px; }
+.sat-modal-foot { padding: 12px 16px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 8px; }
+
+@media print {
+  .sat-tabs, .sat-no-print, nav, header, footer, .navbar { display: none !important; }
+  .sat-panel { display: block !important; }
+  .sat-card { box-shadow: none; break-inside: avoid; }
+}
+
+/* Utilidades estilo Bootstrap 5 usadas en las pantallas de contabilidad,
+   para que se vean igual si el sistema carga Bootstrap 3. */
+.sat-modulo .d-flex { display: flex !important; }
+.sat-modulo .flex-wrap { flex-wrap: wrap; }
+.sat-modulo .justify-content-between { justify-content: space-between; }
+.sat-modulo .align-items-center { align-items: center; }
+.sat-modulo .align-items-start { align-items: flex-start; }
+.sat-modulo .align-items-end { align-items: flex-end; }
+.sat-modulo .align-self-start { align-self: flex-start; }
+.sat-modulo .gap-2 { gap: 8px; }
+.sat-modulo .w-100 { width: 100%; }
+.sat-modulo .mb-0 { margin-bottom: 0 !important; } .sat-modulo .mb-1 { margin-bottom: 4px; } .sat-modulo .mb-3 { margin-bottom: 14px; } .sat-modulo .mb-4 { margin-bottom: 20px; }
+.sat-modulo .mt-3 { margin-top: 14px; } .sat-modulo .p-3 { padding: 14px; } .sat-modulo .p-4 { padding: 18px; }
+.sat-modulo .text-end { text-align: right; } .sat-modulo .fw-bold { font-weight: 700; }
+.sat-modulo .form-label { font-weight: 600; font-size: 12px; display: block; }
+.sat-modulo .row.g-2 > [class*=col-], .sat-modulo .row.g-3 > [class*=col-] { margin-bottom: 10px; }
+.sat-modulo .border-danger { border-color: #fca5a5 !important; } .sat-modulo .border-success { border-color: #86efac !important; }
+.sat-modulo .form-check { display: flex; gap: 6px; align-items: center; }
+.sat-modulo .btn-outline-primary, .sat-modulo .btn-outline-secondary, .sat-modulo .btn-outline-dark, .sat-modulo .btn-outline-success { background: #fff; border: 1px solid #d1d5db; color: #374151; }
+.sat-modulo .btn-outline-primary { border-color: #2563eb; color: #2563eb; }
+.sat-modulo .btn-outline-success { border-color: #16a34a; color: #15803d; }
+.sat-modulo .btn-outline-primary:hover, .sat-modulo .btn-outline-secondary:hover, .sat-modulo .btn-outline-dark:hover, .sat-modulo .btn-outline-success:hover { background: #f3f4f6; }
+.sat-modulo .btn-dark { background: #1f2937; border-color: #1f2937; color: #fff; }
+.sat-modulo .btn-dark:hover { background: #111827; color: #fff; }

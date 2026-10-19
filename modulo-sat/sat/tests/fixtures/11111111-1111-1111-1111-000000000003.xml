@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:pago20="http://www.sat.gob.mx/Pagos20" Version="4.0" Serie="P" Folio="1" Fecha="2026-09-11T09:00:00" SubTotal="0" Moneda="XXX" Total="0" TipoDeComprobante="P" Exportacion="01" LugarExpedicion="64000">
+<cfdi:Emisor Rfc="EKU9003173C9" Nombre="EMPRESA DEMO" RegimenFiscal="601"/>
+<cfdi:Receptor Rfc="CLI020202BBB" Nombre="CLIENTE DOS" UsoCFDI="CP01" RegimenFiscalReceptor="601" DomicilioFiscalReceptor="64000"/>
+<cfdi:Conceptos><cfdi:Concepto ClaveProdServ="84111506" Cantidad="1" ClaveUnidad="ACT" Descripcion="Pago" ValorUnitario="0" Importe="0" ObjetoImp="01"/></cfdi:Conceptos>
+<cfdi:Complemento>
+<pago20:Pagos Version="2.0"><pago20:Totales TotalTrasladosBaseIVA16="4500.00" TotalTrasladosImpuestoIVA16="720.00" MontoTotalPagos="5220.00"/>
+<pago20:Pago FechaPago="2026-09-10T12:00:00" FormaDePagoP="03" MonedaP="MXN" TipoCambioP="1" Monto="5220.00">
+<pago20:DoctoRelacionado IdDocumento="11111111-1111-1111-1111-000000000002" Serie="A" Folio="2" MonedaDR="USD" EquivalenciaDR="0.0555555556" NumParcialidad="1" ImpSaldoAnt="580.00" ImpPagado="290.00" ImpSaldoInsoluto="290.00" ObjetoImpDR="02">
+<pago20:ImpuestosDR><pago20:TrasladosDR><pago20:TrasladoDR BaseDR="250.00" ImpuestoDR="002" TipoFactorDR="Tasa" TasaOCuotaDR="0.160000" ImporteDR="40.00"/></pago20:TrasladosDR></pago20:ImpuestosDR>
+</pago20:DoctoRelacionado></pago20:Pago></pago20:Pagos>
+<tfd:TimbreFiscalDigital Version="1.1" UUID="11111111-1111-1111-1111-000000000003" FechaTimbrado="2026-09-11T09:01:00"/></cfdi:Complemento>
+</cfdi:Comprobante>

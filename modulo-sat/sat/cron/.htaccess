@@ -1,0 +1,7 @@
+# Solo cron_web.php es accesible por URL (y requiere token).
+Require all denied
+Deny from all
+<Files "cron_web.php">
+  Require all granted
+  Allow from all
+</Files>
