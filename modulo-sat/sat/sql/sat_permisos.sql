@@ -1,44 +1,46 @@
 -- =====================================================================
 -- Alta del módulo SAT y sus pantallas en el catálogo de permisos.
 --
--- AJUSTAR ANTES DE EJECUTAR: los nombres de columna de gl_cat_modulos y
--- gl_cat_submodulos son supuestos (no se tuvo la estructura real). Revisa
--- con:  SHOW CREATE TABLE gl_cat_modulos;  SHOW CREATE TABLE gl_cat_submodulos;
--- y renombra las columnas marcadas con  -- <columna>  si difieren.
+-- gl_cat_modulos    (id_modulo, nombre_modulo, url, icono)
+-- gl_cat_submodulos (id_submodulo, nombre_submodulo, id_modulo, URL, categoria)
 --
--- Se puede ejecutar más de una vez: no duplica registros.
+-- Los id se calculan con MAX()+1, así funciona tanto si las columnas id son
+-- AUTO_INCREMENT como si no. Se puede ejecutar más de una vez: no duplica.
 -- =====================================================================
 
 -- 1) Módulo
-INSERT INTO gl_cat_modulos (nombre, descripcion, url, icono, orden, activo)
-SELECT 'SAT', 'Descarga masiva de CFDI, programación de peticiones, reporte fiscal y contabilidad', 'sat/index.php', 'fa-university', 99, 1
-FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM gl_cat_modulos WHERE nombre = 'SAT');
+INSERT INTO gl_cat_modulos (id_modulo, nombre_modulo, url, icono)
+SELECT COALESCE(MAX(id_modulo), 0) + 1, 'SAT', 'sat/index.php', 'fa-university'
+FROM gl_cat_modulos
+HAVING NOT EXISTS (SELECT 1 FROM gl_cat_modulos WHERE nombre_modulo = 'SAT');
 
-SET @id_modulo_sat = (SELECT id_modulo FROM gl_cat_modulos WHERE nombre = 'SAT' LIMIT 1);
+SET @id_modulo_sat = (SELECT id_modulo FROM gl_cat_modulos WHERE nombre_modulo = 'SAT' LIMIT 1);
+SET @id_sub = (SELECT COALESCE(MAX(id_submodulo), 0) FROM gl_cat_submodulos);
 
 -- 2) Submódulos (una fila por pantalla)
-INSERT INTO gl_cat_submodulos (id_modulo, nombre, descripcion, url, orden, activo)
-SELECT @id_modulo_sat, s.nombre, s.descripcion, s.url, s.orden, 1
+INSERT INTO gl_cat_submodulos (id_submodulo, nombre_submodulo, id_modulo, URL, categoria)
+SELECT @id_sub + s.orden, s.nombre, @id_modulo_sat, s.url, s.categoria
 FROM (
-    SELECT 'Inicio'                 AS nombre, 'Indicadores y avisos del módulo SAT'                          AS descripcion, 'sat/index.php'                  AS url, 1  AS orden
-    UNION ALL SELECT 'Empresas y e.firma',     'Alta de empresas, carga y prueba de e.firma',                     'sat/empresas.php',               2
-    UNION ALL SELECT 'Descargas',              'Solicitudes manuales al SAT y seguimiento',                        'sat/descargas.php',              3
-    UNION ALL SELECT 'Programación',           'Peticiones automáticas de emitidos y recibidos',                   'sat/programacion.php',           4
-    UNION ALL SELECT 'Reporte fiscal',         'IVA por flujo de efectivo, ISR estimado, PPD pendientes',          'sat/reporte.php',                5
-    UNION ALL SELECT 'Contabilidad',           'Pólizas automáticas generadas desde CFDI',                         'sat/contabilidad.php',           6
-    UNION ALL SELECT 'Póliza (detalle)',       'Ver y resolver diferencias de una póliza',                         'sat/poliza.php',                 7
-    UNION ALL SELECT 'Configuración contable', 'Cuentas de impuestos, clientes y proveedores por empresa',         'sat/configuracion_contable.php', 8
-    UNION ALL SELECT 'Catálogo de cuentas',    'Cuentas contables por empresa',                                    'sat/cuentas_contables.php',      9
-    UNION ALL SELECT 'Reglas contables',       'Reglas de clasificación y aprendizaje',                            'sat/reglas_contables.php',       10
-    UNION ALL SELECT 'Bitácora',               'Registro de procesos del módulo SAT',                              'sat/bitacora.php',               11
+              SELECT 1 AS orden, 'Inicio SAT'             AS nombre, 'sat/index.php'                  AS url, 'Descarga SAT' AS categoria
+    UNION ALL SELECT 2,  'Empresas y e.firma',     'sat/empresas.php',               'Descarga SAT'
+    UNION ALL SELECT 3,  'Descargas SAT',          'sat/descargas.php',              'Descarga SAT'
+    UNION ALL SELECT 4,  'Programación SAT',       'sat/programacion.php',           'Descarga SAT'
+    UNION ALL SELECT 5,  'Bitácora SAT',           'sat/bitacora.php',               'Descarga SAT'
+    UNION ALL SELECT 6,  'Reporte fiscal',         'sat/reporte.php',                'Reportes'
+    UNION ALL SELECT 7,  'Contabilidad',           'sat/contabilidad.php',           'Contabilidad'
+    UNION ALL SELECT 8,  'Póliza (detalle)',       'sat/poliza.php',                 'Contabilidad'
+    UNION ALL SELECT 9,  'Configuración contable', 'sat/configuracion_contable.php', 'Contabilidad'
+    UNION ALL SELECT 10, 'Catálogo de cuentas',    'sat/cuentas_contables.php',      'Contabilidad'
+    UNION ALL SELECT 11, 'Reglas contables',       'sat/reglas_contables.php',       'Contabilidad'
 ) s
 WHERE @id_modulo_sat IS NOT NULL
-  AND NOT EXISTS (SELECT 1 FROM gl_cat_submodulos x WHERE x.id_modulo = @id_modulo_sat AND x.url = s.url);
+  AND NOT EXISTS (SELECT 1 FROM gl_cat_submodulos x WHERE x.id_modulo = @id_modulo_sat AND x.URL = s.url)
+ORDER BY s.orden;
 
 -- 3) Verificación
-SELECT m.id_modulo, m.nombre AS modulo, s.id_submodulo, s.nombre AS submodulo, s.url, s.orden
+SELECT m.id_modulo, m.nombre_modulo, m.url, m.icono,
+       s.id_submodulo, s.nombre_submodulo, s.URL, s.categoria
 FROM gl_cat_modulos m
 JOIN gl_cat_submodulos s ON s.id_modulo = m.id_modulo
-WHERE m.nombre = 'SAT'
-ORDER BY s.orden;
+WHERE m.nombre_modulo = 'SAT'
+ORDER BY s.id_submodulo;
