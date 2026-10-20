@@ -25,7 +25,7 @@ $meses = array('', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio
     <div class="col-sm-2 sat-campo"><label>&nbsp;</label><button type="button" class="btn btn-primary" style="width:100%" onclick="fnReporte()"><i class="fa fa-search"></i> Generar</button></div>
   </div>
   <div class="sat-acciones">
-    <button type="button" class="btn btn-default btn-outline-secondary" onclick="fnExportarReporte()"><i class="fa fa-file-excel-o"></i> Exportar resumen</button>
+    <button type="button" class="btn btn-default btn-outline-secondary" onclick="fnExportarReporte()"><i class="fa fa-file-excel-o fa-file-excel"></i> Exportar resumen</button>
     <button type="button" class="btn btn-default btn-outline-secondary" onclick="window.print()"><i class="fa fa-print"></i> Imprimir</button>
     <span class="sat-ayuda">Criterio de flujo de efectivo: PUE en el mes de emisión, PPD en el mes de pago (complemento) y notas de crédito restando.</span>
   </div>

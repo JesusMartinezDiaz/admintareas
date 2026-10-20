@@ -20,7 +20,7 @@ function fnEmpresas() {
         '<td class="num">' + SAT.num(e.cfdi) + '</td><td class="num">' + SAT.num(e.programaciones) + '</td>' +
         '<td>' + (parseInt(e.activo, 10) ? '<span class="sat-badge ok">Activa</span>' : '<span class="sat-badge gris">Inactiva</span>') + '</td>' +
         '<td class="sat-acciones" style="justify-content:flex-end">' +
-          '<button class="btn btn-xs btn-sm btn-default btn-outline-secondary" onclick="fnEmpresaEditar(' + i + ')" title="Editar"><i class="fa fa-pencil"></i></button>' +
+          '<button class="btn btn-xs btn-sm btn-default btn-outline-secondary" onclick="fnEmpresaEditar(' + i + ')" title="Editar"><i class="fa fa-pencil fa-pencil-alt"></i></button>' +
           '<button class="btn btn-xs btn-sm btn-primary" onclick="fnCertAbrir(' + i + ')"><i class="fa fa-key"></i> e.firma</button>' +
           (e.id_certificado ? '<button class="btn btn-xs btn-sm btn-success" onclick="fnProbar(' + e.id_empresa + ')"><i class="fa fa-plug"></i> Probar</button>' : '') +
           '<button class="btn btn-xs btn-sm btn-default btn-outline-secondary" onclick="fnEmpresaEstado(' + e.id_empresa + ',' + (parseInt(e.activo, 10) ? 0 : 1) + ')">' + (parseInt(e.activo, 10) ? 'Desactivar' : 'Activar') + '</button>' +

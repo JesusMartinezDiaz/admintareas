@@ -19,9 +19,9 @@ function sat_page_inicio($activo, $titulo)
     $menu = array(
         'inicio' => array('index.php', 'fa-home', 'Inicio'),
         'empresas' => array('empresas.php', 'fa-building', 'Empresas y e.firma'),
-        'descargas' => array('descargas.php', 'fa-cloud-download', 'Descargas'),
-        'programacion' => array('programacion.php', 'fa-clock-o', 'Programación'),
-        'reporte' => array('reporte.php', 'fa-bar-chart', 'Reporte fiscal'),
+        'descargas' => array('descargas.php', 'fa-cloud-download fa-cloud-download-alt', 'Descargas'),
+        'programacion' => array('programacion.php', 'fa-clock-o fa-clock', 'Programación'),
+        'reporte' => array('reporte.php', 'fa-bar-chart fa-chart-bar', 'Reporte fiscal'),
         'contabilidad' => array('contabilidad.php', 'fa-book', 'Contabilidad'),
         'bitacora' => array('bitacora.php', 'fa-list', 'Bitácora'),
     );

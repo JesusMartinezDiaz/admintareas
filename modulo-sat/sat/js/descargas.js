@@ -29,7 +29,7 @@ function fnSolicitudes() {
         '<td><b>' + SAT.esc(s.rfc) + '</b><br><small>' + SAT.esc(s.razon_social) + '</small></td>' +
         '<td>' + SAT.esc(s.tipo_descarga) + '<br><small>' + SAT.esc(s.tipo_archivo) + (s.tipo_comprobante ? ' · ' + SAT.esc(s.tipo_comprobante) : '') + '</small></td>' +
         '<td><small>' + SAT.fecha(s.fecha_hora_inicial || s.fecha_inicial) + '<br>' + SAT.fecha(s.fecha_hora_final || s.fecha_final) + '</small></td>' +
-        '<td>' + (s.origen === 'PROGRAMADA' ? '<span class="sat-badge azul" title="' + SAT.esc(s.programacion || '') + '"><i class="fa fa-clock-o"></i> Programada</span>' : '<span class="sat-badge gris">Manual</span>') + '<br><small>' + SAT.fecha(s.fecha_alta) + '</small></td>' +
+        '<td>' + (s.origen === 'PROGRAMADA' ? '<span class="sat-badge azul" title="' + SAT.esc(s.programacion || '') + '"><i class="fa fa-clock-o fa-clock"></i> Programada</span>' : '<span class="sat-badge gris">Manual</span>') + '<br><small>' + SAT.fecha(s.fecha_alta) + '</small></td>' +
         '<td>' + SAT.badgeEstado(s.estado_solicitud) + '<br><small>' + SAT.esc((s.mensaje_sat || '').substring(0, 120)) + '</small></td>' +
         '<td class="num">' + SAT.num(s.total_cfdi) + '</td>' +
         '<td class="num">' + pd + '/' + tp + '</td>' +

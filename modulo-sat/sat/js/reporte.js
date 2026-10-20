@@ -157,7 +157,7 @@ function panelDetalle() {
     '<div class="col-sm-2 sat-campo"><label>Método</label><select class="form-control" id="dMetodo"><option value="">Todos</option><option>PUE</option><option>PPD</option></select></div>' +
     '<div class="col-sm-2 sat-campo"><label>Estatus</label><select class="form-control" id="dEstatus"><option value="">Todos</option><option value="VIGENTE">Vigentes</option><option value="CANCELADO">Cancelados</option></select></div>' +
     '<div class="col-sm-2 sat-campo"><label>Buscar</label><input class="form-control" id="dBuscar" placeholder="RFC, nombre, UUID, folio"></div>' +
-    '<div class="col-sm-2 sat-campo"><label>&nbsp;</label><div class="sat-acciones"><button class="btn btn-primary" onclick="fnDetalle()"><i class="fa fa-search"></i></button><button class="btn btn-default btn-outline-secondary" onclick="fnExportarDetalle()" title="Exportar a Excel"><i class="fa fa-file-excel-o"></i></button></div></div>' +
+    '<div class="col-sm-2 sat-campo"><label>&nbsp;</label><div class="sat-acciones"><button class="btn btn-primary" onclick="fnDetalle()"><i class="fa fa-search"></i></button><button class="btn btn-default btn-outline-secondary" onclick="fnExportarDetalle()" title="Exportar a Excel"><i class="fa fa-file-excel-o fa-file-excel"></i></button></div></div>' +
     '</div><div class="sat-scroll"><table class="sat-tabla"><thead><tr><th>Fecha</th><th>Rel.</th><th>Tipo</th><th>Folio / UUID</th><th>Emisor</th><th>Receptor</th><th>Mét.</th><th class="num">Subtotal</th><th class="num">IVA</th><th class="num">Ret.</th><th class="num">Total</th><th>Estatus</th><th></th></tr></thead><tbody id="tbDetalle"><tr><td colspan="13" class="sat-vacio">Presiona buscar.</td></tr></tbody></table></div></div></div>';
 }
 

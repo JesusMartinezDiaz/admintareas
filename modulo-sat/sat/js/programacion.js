@@ -22,7 +22,7 @@ function fnProgramaciones() {
         '<td>' + (activo ? '<span class="sat-badge ok">Activa</span>' : '<span class="sat-badge gris">Pausada</span>') + '</td>' +
         '<td class="sat-acciones" style="justify-content:flex-end;flex-wrap:nowrap">' +
           '<button class="btn btn-xs btn-sm btn-success" title="Ejecutar ahora" onclick="fnProgEjecutar(' + p.id_programacion + ')"><i class="fa fa-play"></i></button>' +
-          '<button class="btn btn-xs btn-sm btn-default btn-outline-secondary" title="Editar" onclick="fnProgEditar(' + i + ')"><i class="fa fa-pencil"></i></button>' +
+          '<button class="btn btn-xs btn-sm btn-default btn-outline-secondary" title="Editar" onclick="fnProgEditar(' + i + ')"><i class="fa fa-pencil fa-pencil-alt"></i></button>' +
           '<button class="btn btn-xs btn-sm btn-default btn-outline-secondary" title="Historial" onclick="fnProgHistorial(' + i + ')"><i class="fa fa-history"></i></button>' +
           '<button class="btn btn-xs btn-sm btn-default btn-outline-secondary" title="' + (activo ? 'Pausar' : 'Activar') + '" onclick="fnProgEstado(' + p.id_programacion + ',' + (activo ? 0 : 1) + ')"><i class="fa ' + (activo ? 'fa-pause' : 'fa-check') + '"></i></button>' +
           '<button class="btn btn-xs btn-sm btn-danger" title="Eliminar" onclick="fnProgEliminar(' + p.id_programacion + ')"><i class="fa fa-trash"></i></button>' +

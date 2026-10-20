@@ -37,7 +37,7 @@ $opcEmpresas = sat_opciones_empresas($con, 0, 'Seleccione');
       <select class="form-control" id="fEmpresa" style="width:auto"><?= sat_opciones_empresas($con, 0, 'Todas las empresas') ?></select>
       <select class="form-control" id="fEstado" style="width:auto"><option value="">Todos los estados</option><option value="PENDIENTES">En proceso SAT</option><option value="TERMINADAS">Terminadas</option><option value="ERRORES">Con error</option></select>
       <select class="form-control" id="fOrigen" style="width:auto"><option value="">Manual y programadas</option><option value="MANUAL">Manuales</option><option value="PROGRAMADA">Programadas</option></select>
-      <button type="button" class="btn btn-default btn-outline-secondary" onclick="fnSolicitudes()"><i class="fa fa-refresh"></i></button>
+      <button type="button" class="btn btn-default btn-outline-secondary" onclick="fnSolicitudes()"><i class="fa fa-refresh fa-sync"></i></button>
     </div>
   </div>
   <div class="sat-scroll">
